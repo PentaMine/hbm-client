@@ -9,7 +9,7 @@ import spyl
 import time as tm
 
 
-class CmdletThread(threading.Thread):
+class TerminalSession(threading.Thread):
     def run(self) -> None:
         run_executable(self.executable)
         logger.log(F"PROCESS \"{self.executable.name}\" FINISHED", SuccessLevel)
@@ -67,8 +67,8 @@ def run_executable(executable: Executable):
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-logger = spyl.Logger()
-SuccessLevel = spyl.Logger.LogLevel("DONE", Fore.GREEN)
+logger = spyl.Logger(quitWhenLogFatal=True)
+SuccessLevel = spyl.LogLevel("DONE", Fore.GREEN)
 
 if not validate_ini_file(config):
     logger.log_fatal("CONFIG.INI IS INVALID")
@@ -98,7 +98,7 @@ while True:
         # print(executable.runTime, datetime.now().time(), executable.runTime > datetime.now().time())
         if executable.runTime < datetime.now().time() and not executable.didRun:
             logger.log_info(F"STARTING A THREAD FOR PROCESS \"{executable.name}\"")
-            thread = CmdletThread()
+            thread = TerminalSession()
             thread.executable = executable
             thread.start()
             executable.didRun = True
