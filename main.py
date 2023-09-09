@@ -60,7 +60,7 @@ def get_values_form_config(conf):
 
 def run_executable(executable: Executable):
     os.chdir(executable.path)
-    os.system(f"start /wait cmd /c {executable.command}")
+    os.system(executable.command)
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 
@@ -68,6 +68,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 logger = spyl.Logger(quitWhenLogFatal=True)
+
 SuccessLevel = spyl.LogLevel("DONE", Fore.GREEN)
 
 if not validate_ini_file(config):
